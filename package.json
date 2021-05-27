@@ -1,0 +1,37 @@
+{
+  "name": "meropustakalaya-api",
+  "jest": {
+    "setupFiles": [
+      "dotenv/config"
+    ]
+  },
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --testEnvironment=node --watchAll --verbose --detectOpenHandles  ",
+    "start": "nodemon index.js"
+  },
+  "author": "bibek shrestha",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "fawn": "^2.1.5",
+    "jest": "^26.6.3",
+    "joi": "^17.3.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.20",
+    "moment": "^2.29.1",
+    "mongoose": "^5.11.14",
+    "multer": "^1.4.2",
+    "mz": "^2.7.0",
+    "nodemailer": "^6.5.0",
+    "nodemon": "^2.0.7"
+  },
+  "devDependencies": {
+    "supertest": "^6.1.3"
+  }
+}
