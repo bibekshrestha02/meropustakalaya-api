@@ -18,10 +18,11 @@ exports.autologin = asyncMiddleware(async (req, res, next) => {
 });
 exports.signUp = asyncMiddleware(async (req, res, next) => {
   const { error } = validateUser(req.body);
-  const { email, name, password } = req.body;
+  let { email, name, password } = req.body;
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
+  email = email.toLowerCase();
   const isEmail = await User.findOne({ email });
   if (isEmail) {
     return res.status(400).json({
@@ -40,13 +41,14 @@ exports.signUp = asyncMiddleware(async (req, res, next) => {
   next();
 });
 exports.login = asyncMiddleware(async (req, res, next) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
   const { error } = validateLogin(req.body);
   if (error) {
     let path = error.details[0].path[0];
     let message = error.details[0].message;
     return res.status(400).json({ validation: 'field', field: path, message });
   }
+  email = email.toLowerCase();
   let userData = await User.findOne({ email: email }).populate(
     'subscriptionDetail'
   );
@@ -91,6 +93,8 @@ exports.sendToken = asyncMiddleware(async (req, res) => {
       .status(400)
       .json({ type: 'email', message: 'Email is required' });
   }
+  email = email.toLowerCase();
+
   let user = await User.findOne({ email: email });
 
   if (!user) {
@@ -129,10 +133,11 @@ exports.sendToken = asyncMiddleware(async (req, res) => {
 });
 
 exports.verifyEmail = asyncMiddleware(async (req, res) => {
-  const { email, otp } = req.params;
+  let { email, otp } = req.params;
   if (!email || !otp) {
     return res.status(400).send('Otp and email are requied');
   }
+  email = email.toLowerCase();
   let user = await User.findOne({ email: email });
   if (!user) {
     return res.status(400).json({
@@ -204,7 +209,8 @@ exports.updatePassword = asyncMiddleware(async (req, res, next) => {
   });
 });
 exports.findAccount = asyncMiddleware(async (req, res, next) => {
-  const { email } = req.params;
+  let { email } = req.params;
+  email = email.toLowerCase();
   let user = await User.findOne({ email: email }).select('name email _id role');
   if (!user) {
     return res
@@ -217,8 +223,8 @@ exports.findAccount = asyncMiddleware(async (req, res, next) => {
   });
 });
 exports.forgetPasswordSendOTP = asyncMiddleware(async (req, res, next) => {
-  const { email } = req.body;
-
+  let { email } = req.body;
+  email = email.toLowerCase();
   if (!email) {
     return res.status(400).json({ email: false, message: 'Invalid email' });
   }
@@ -248,7 +254,8 @@ exports.forgetPasswordSendOTP = asyncMiddleware(async (req, res, next) => {
   }
 });
 exports.forgetVerifyCode = asyncMiddleware(async (req, res) => {
-  const { otp, email } = req.params;
+  let { otp, email } = req.params;
+  email = email.toLowerCase();
   if (!otp || !email) {
     return res.status(400).send('otp and  email is required');
   }
@@ -292,8 +299,8 @@ exports.forgetVerifyCode = asyncMiddleware(async (req, res) => {
   });
 });
 exports.forgetResetPassword = asyncMiddleware(async (req, res) => {
-  const { otp, email, newPassword } = req.body;
-
+  let { otp, email, newPassword } = req.body;
+  email = email.toLowerCase();
   if (!otp || !email || !newPassword) {
     return res.status(400).send('otp,password,  email is required');
   }
