@@ -2,9 +2,15 @@ const mongoose = require('mongoose');
 const Fawn = require('fawn');
 module.exports = () => {
   let db;
-  process.env.NODE_ENV === 'development'
-    ? (db = process.env.DB_PRODUCTION)
-    : (db = process.env.DB_TEST);
+  let node_env = process.env.NODE_ENV;
+
+  if (node_env === 'test') {
+    db = process.env.DB_TEST;
+  } else if (node_env === 'development') {
+    db = process.env.DB_DEVELOPMENT;
+  } else {
+    db = process.env.DB_PRODUCTION;
+  }
   mongoose
     .connect(db, {
       useNewUrlParser: true,
