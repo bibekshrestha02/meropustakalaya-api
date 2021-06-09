@@ -116,8 +116,8 @@ exports.sendToken = asyncMiddleware(async (req, res) => {
     });
   }
 
-  let subject = `${otp} is your Meropustakalaya email verfication code`;
-  let message = `${name},welcome to Meropustakalaya. Don't share this code with others. Your activation code is ${otp}. `;
+  let subject = `${otp} is your Meropustakalaya Email Verfication Code`;
+  let message = `${name}, don't share this code with others. Your activation code is ${otp}.`;
   try {
     await emailHanlder({ email, subject, message });
     res.status(201).json({
@@ -131,7 +131,6 @@ exports.sendToken = asyncMiddleware(async (req, res) => {
     res.status(500).send('something went wrong');
   }
 });
-
 exports.verifyEmail = asyncMiddleware(async (req, res) => {
   let { email, otp } = req.params;
   if (!email || !otp) {
@@ -237,8 +236,8 @@ exports.forgetPasswordSendOTP = asyncMiddleware(async (req, res, next) => {
   user.passwordResetToken = hashOtp;
   user.passwordResetExpires = Date.now() + 10 * 60 * 1000;
   user = await user.save();
-  const subject = `${otp} is your Meropustakalaya recovery code`;
-  const message = `We received a request to reset your MeroPustakalaya password. Enter the following password reset code:\n ${otp}`;
+  const subject = `${otp} is your Password Recover Code`;
+  const message = `We received a request to reset your MeroPustakalaya password. Enter the ${otp} code to reset your password. `;
   try {
     await emailHanlder({ email, subject, message });
     res.status(200).json({
@@ -250,6 +249,7 @@ exports.forgetPasswordSendOTP = asyncMiddleware(async (req, res, next) => {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save();
+    console.log(error);
     res.status(500).send('something went wrong');
   }
 });
