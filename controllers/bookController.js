@@ -2,7 +2,6 @@ const asyncFn = require('../middlerware/asyncMiddleware');
 const { Book, bookValidation } = require('../models/bookModel');
 const { Review } = require('../models/reviewModel');
 const { Category } = require('../models/categoryModel');
-const { deleteFiles } = require('../helpers/helperFn');
 const mongoose = require('mongoose');
 exports.createBook = asyncFn(async (req, res, next) => {
   const { error } = bookValidation(req.body);
@@ -117,7 +116,7 @@ exports.getBookFile = asyncFn(async (req, res) => {
     res.status(400).json({ message: 'invalid id' });
     return;
   }
-  const book = await Book.findById(id);
+  const book = await Book.findById(id).select('file');
   if (!book) {
     res.status(400).json({ message: 'invalid id' });
     return;
