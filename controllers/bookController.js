@@ -111,7 +111,24 @@ exports.deleteBook = asyncFn(async (req, res) => {
   await Review.deleteMany({ book: id });
   res.status(200).json({ message: 'success' });
 });
-
+exports.getBookFile = asyncFn(async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.isValidObjectId(id)) {
+    res.status(400).json({ message: 'invalid id' });
+    return;
+  }
+  const book = await Book.findById(id);
+  if (!book) {
+    res.status(400).json({ message: 'invalid id' });
+    return;
+  }
+  res.status(200).json({
+    status: 200,
+    data: {
+      file: book.file,
+    },
+  });
+});
 exports.getBook = asyncFn(async (req, res) => {
   const { id } = req.params;
   let user;

@@ -8,11 +8,13 @@ const {
   getBooks,
   showBooksRandom,
   deleteBook,
+  getBookFile,
 } = require('../controllers/bookController');
 const {
   checkAdmin,
   verifyToken,
   isToken_user,
+  checkIsSubscribe,
 } = require('../middlerware/authMiddleware');
 Route.get('/', getBooks);
 Route.post('/', verifyToken, checkAdmin, createBook);
@@ -21,4 +23,5 @@ Route.delete('/', verifyToken, checkAdmin, deleteBooks);
 Route.delete('/:id', verifyToken, checkAdmin, deleteBook);
 Route.get('/shows/', showBooksRandom);
 Route.get('/:id', isToken_user, getBook);
+Route.get('/file/:id', verifyToken, checkIsSubscribe, getBookFile);
 module.exports = Route;
