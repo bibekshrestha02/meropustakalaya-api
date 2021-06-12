@@ -10,7 +10,7 @@ exports.createBook = asyncFn(async (req, res, next) => {
   }
   let category = await Category.findById(req.body.categoryId);
   if (!category) {
-    return res.status(400).send('invalid category id');
+    return res.status(400).json({ message: 'invalid category id' });
   }
   const { name, autherName, pages, description, photo, file } = req.body;
   let book = new Book({

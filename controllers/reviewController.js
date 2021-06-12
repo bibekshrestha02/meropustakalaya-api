@@ -6,15 +6,17 @@ exports.postReview = asyncMiddleware(async (req, res, next) => {
   let book, review;
   const { error } = reviewValidation(req.body);
   if (error) {
-    return res.status(400).send(error.details[0].message);
+    return res.status(400).json({ message: error.details[0].message });
   }
   book = await Book.findById(req.body.book);
   if (!book) {
-    return res.status(400).send('Invalid book id');
+    return res.status(400).json({ message: 'Invalid book id' });
   }
   review = await Review.findOne({ book: book._id, user: req.user._id });
   if (review) {
-    return res.status(400).send('cannot post more than one review');
+    return res
+      .status(400)
+      .json({ message: 'cannot post more than one review' });
   }
   review = await Review.create({
     user: req.user._id,

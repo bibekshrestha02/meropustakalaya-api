@@ -5,7 +5,7 @@ exports.verifyToken = async (req, res, next) => {
   try {
     const token = req.header('x-auth-token');
     if (!token) {
-      return res.status(401).send('No token provided');
+      return res.status(401).json({ message: 'No token provided' });
     }
     const decode = jwt.verify(token, process.env.JWT_KEY);
     if (!(await User.findById({ _id: decode._id }))) {
@@ -14,7 +14,7 @@ exports.verifyToken = async (req, res, next) => {
     req.user = decode;
     next();
   } catch (error) {
-    res.status(401).send('invalid token');
+    res.status(401).json({ message: 'invalid token' });
   }
 };
 exports.isToken_user = async (req, res, next) => {
@@ -32,7 +32,7 @@ exports.isToken_user = async (req, res, next) => {
     req.user = decode;
     next();
   } catch (error) {
-    res.status(401).send('invalid token');
+    res.status(401).json({ message: 'invalid token' });
   }
 };
 exports.checkAdmin = (req, res, next) => {
@@ -42,9 +42,9 @@ exports.checkAdmin = (req, res, next) => {
       return next();
     }
 
-    res.status(403).send('Not Allowed To Get Access');
+    res.status(403).json({ message: 'Not Allowed To Get Access' });
   } catch (error) {
-    res.status(500).send('Something went wrong');
+    res.status(500).json({ message: 'Something went wrong' });
   }
 };
 
@@ -61,7 +61,7 @@ exports.checkIsSubscribe = async (req, res, next) => {
   const { expires_at } = subscribtion;
 
   if (Date.parse(expires_at) < Date.now()) {
-    return res.status(403).send('Membership expired');
+    return res.status(403).json({ message: 'Membership expired' });
   }
   next();
 };
