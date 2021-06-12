@@ -56,7 +56,7 @@ exports.checkIsSubscribe = async (req, res, next) => {
   }
   let subscribtion = await Membership.findOne({ user_id: userId });
   if (!subscribtion) {
-    return res.status(403).send('forbidden to access');
+    return res.status(403).json({ message: 'Get Subscription to access' });
   }
   const { expires_at } = subscribtion;
 
