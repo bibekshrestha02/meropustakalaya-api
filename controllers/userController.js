@@ -59,13 +59,13 @@ exports.getUser = asyncMiddleware(async (req, res) => {
   });
 });
 exports.updateName = asyncMiddleware(async (req, res) => {
-  const { name } = req.body;
+  let { name } = req.body;
   const { error } = validateUserName(req.body);
   if (error) {
     return res.status(400).send(error.details[0].message);
   }
   const { _id } = req.user;
-
+  name = name.trim();
   await User.findByIdAndUpdate(_id, { name: name }, { new: true });
   let user = await User.findById(_id)
     .populate('subscriptionDetail')
@@ -87,8 +87,8 @@ exports.createUser = asyncMiddleware(async (req, res) => {
       .json({ name: 'email', message: 'Email already exits' });
   }
   let userData = new User({
-    name: req.body.name,
-    email: req.body.email,
+    name: req.body.name.trim(),
+    email: req.body.email.trim(),
     password: req.body.password,
     role: req.body.role,
   });

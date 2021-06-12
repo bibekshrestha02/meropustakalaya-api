@@ -22,7 +22,8 @@ exports.signUp = asyncMiddleware(async (req, res, next) => {
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
-  email = email.toLowerCase();
+  name = name.trim();
+  email = email.toLowerCase().trim();
   const isEmail = await User.findOne({ email });
   if (isEmail) {
     return res.status(400).json({
@@ -48,7 +49,7 @@ exports.login = asyncMiddleware(async (req, res, next) => {
     let message = error.details[0].message;
     return res.status(400).json({ validation: 'field', field: path, message });
   }
-  email = email.toLowerCase();
+  email = email.toLowerCase().trim();
   let userData = await User.findOne({ email: email }).populate(
     'subscriptionDetail'
   );
@@ -209,7 +210,7 @@ exports.updatePassword = asyncMiddleware(async (req, res, next) => {
 });
 exports.findAccount = asyncMiddleware(async (req, res, next) => {
   let { email } = req.params;
-  email = email.toLowerCase();
+  email = email.toLowerCase().trim();
   let user = await User.findOne({ email: email }).select('name email _id role');
   if (!user) {
     return res
