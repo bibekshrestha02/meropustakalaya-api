@@ -42,7 +42,7 @@ exports.checkAdmin = (req, res, next) => {
       return next();
     }
 
-    res.status(403).send('forbidin to acess');
+    res.status(403).send('Not Allowed To Get Access');
   } catch (error) {
     res.status(500).send('Something went wrong');
   }
