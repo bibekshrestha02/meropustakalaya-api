@@ -66,6 +66,8 @@ exports.bookValidation = (data) => {
         }
       })
       .required(),
+    photo: Joi.string().required(),
+    file: Joi.string().required(),
   });
   return validation.validate(data);
 };

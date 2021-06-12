@@ -16,7 +16,7 @@ const {
   isToken_user,
 } = require('../middlerware/authMiddleware');
 Route.get('/', getBooks);
-Route.post('/', verifyToken, checkAdmin, upload, createBook);
+Route.post('/', verifyToken, checkAdmin, createBook);
 Route.put('/:id', verifyToken, checkAdmin, upload, updateBooks);
 Route.delete('/', verifyToken, checkAdmin, deleteBooks);
 Route.delete('/:id', verifyToken, checkAdmin, deleteBook);

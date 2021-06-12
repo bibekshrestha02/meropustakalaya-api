@@ -5,18 +5,12 @@ const { Category } = require('../models/categoryModel');
 const { deleteFiles } = require('../helpers/helperFn');
 const mongoose = require('mongoose');
 exports.createBook = asyncFn(async (req, res, next) => {
-  const image = req.files.bookImage[0];
-  const file = req.files.bookFile[0];
   const { error } = bookValidation(req.body);
   if (error) {
-    await deleteFiles(image.path);
-    await deleteFiles(file.path);
-    return res.status(400).send(error.details[0].message);
+    return res.status(400).json({ message: error.details[0].message });
   }
   let category = await Category.findById(req.body.categoryId);
   if (!category) {
-    await deleteFiles(image.path);
-    await deleteFiles(file.path);
     return res.status(400).send('invalid category id');
   }
   let book = new Book({
@@ -25,16 +19,10 @@ exports.createBook = asyncFn(async (req, res, next) => {
     pages: req.body.pages,
     description: req.body.description,
     category: category.name,
-    photo: image.path,
-    file: file.path,
+    photo: req.body.photo,
+    file: req.body.file,
   });
-  try {
-    await book.save();
-  } catch (error) {
-    await deleteFiles(image.path);
-    await deleteFiles(file.path);
-    return res.status(500).json({ message: 'something went wrong' });
-  }
+  await book.save();
   res.status(201).json({
     status: 201,
     message: 'success',
