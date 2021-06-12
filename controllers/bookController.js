@@ -87,10 +87,6 @@ exports.deleteBooks = asyncFn(async (req, res, next) => {
   if (books.length < 1) {
     return res.status(400).send('Invalid id');
   }
-  await books.map(async (book) => {
-    await deleteFiles(book.file);
-    await deleteFiles(book.photo);
-  });
   await Book.deleteMany({ _id: { $in: ids } });
   await Review.deleteMany({ book: { $in: ids } });
   res.status(200).send('success');
@@ -101,7 +97,7 @@ exports.deleteBook = asyncFn(async (req, res) => {
   if (!mongoose.isValidObjectId(id)) {
     return res.status(400).json({
       type: 'id',
-      message: 'Books Id is required',
+      message: 'Invalid id',
     });
   }
   let book = await Book.findById(id);
@@ -111,11 +107,9 @@ exports.deleteBook = asyncFn(async (req, res) => {
       message: 'Book Not found',
     });
   }
-  await deleteFiles(book.file);
-  await deleteFiles(book.photo);
   await Book.findByIdAndDelete(id);
   await Review.deleteMany({ book: id });
-  res.status(200).send('success');
+  res.status(200).json({ message: 'success' });
 });
 
 exports.getBook = asyncFn(async (req, res) => {
