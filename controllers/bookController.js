@@ -13,18 +13,55 @@ exports.createBook = asyncFn(async (req, res, next) => {
   if (!category) {
     return res.status(400).send('invalid category id');
   }
+  const { name, autherName, pages, description, photo, file } = req.body;
   let book = new Book({
-    name: req.body.name,
-    autherName: req.body.autherName,
-    pages: req.body.pages,
-    description: req.body.description,
+    name,
+    autherName,
+    pages,
+    description,
     category: category.name,
-    photo: req.body.photo,
-    file: req.body.file,
+    photo,
+    file,
   });
   await book.save();
   res.status(201).json({
     status: 201,
+    message: 'success',
+  });
+});
+exports.updateBook = asyncFn(async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.isValidObjectId(id)) {
+    res.status(400).json({ message: 'invalid id' });
+    return;
+  }
+  const book = await Book.findById(id);
+  if (!book) {
+    res.status(400).json({ message: 'invalid id' });
+    return;
+  }
+
+  const { error } = bookValidation(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+  let category = await Category.findById(req.body.categoryId);
+  if (!category) {
+    return res.status(400).json({ message: 'invalid category id' });
+  }
+  const { name, autherName, pages, description, photo, file } = req.body;
+  await Book.findByIdAndUpdate(id, {
+    name,
+    autherName,
+    pages,
+    description,
+    category: category.name,
+    photo,
+    file,
+  });
+
+  res.status(200).json({
+    status: 200,
     message: 'success',
   });
 });
@@ -79,49 +116,6 @@ exports.deleteBook = asyncFn(async (req, res) => {
   await Book.findByIdAndDelete(id);
   await Review.deleteMany({ book: id });
   res.status(200).send('success');
-});
-exports.updateBooks = asyncFn(async (req, res) => {
-  const { id } = req.params;
-  if (!mongoose.isValidObjectId(id)) {
-    res.status(400).send('invalid id');
-    return;
-  }
-  const book = await Book.findById(id);
-  if (!book) {
-    res.status(400).send('invalid id');
-    return;
-  }
-  const image = req.files.bookImage[0];
-  const file = req.files.bookFile[0];
-  const { error } = bookValidation(req.body);
-  if (error) {
-    await deleteFiles(image.path);
-    await deleteFiles(file.path);
-    return res.status(400).send(error.details[0].message);
-  }
-  let category = await Category.findById(req.body.categoryId);
-  if (!category) {
-    await deleteFiles(image.path);
-    await deleteFiles(file.path);
-    return res.status(400).send('invalid category id');
-  }
-  await deleteFiles(book.photo);
-  await deleteFiles(book.file);
-
-  await Book.findByIdAndUpdate(id, {
-    name: req.body.name,
-    autherName: req.body.autherName,
-    pages: req.body.pages,
-    description: req.body.description,
-    category: category.name,
-    photo: image.path,
-    file: file.path,
-  });
-
-  res.status(200).json({
-    status: 200,
-    message: 'success',
-  });
 });
 
 exports.getBook = asyncFn(async (req, res) => {

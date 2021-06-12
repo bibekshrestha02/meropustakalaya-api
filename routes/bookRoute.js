@@ -3,7 +3,7 @@ const Route = express.Router();
 const {
   createBook,
   deleteBooks,
-  updateBooks,
+  updateBook,
   getBook,
   getBooks,
   showBooksRandom,
@@ -17,7 +17,7 @@ const {
 } = require('../middlerware/authMiddleware');
 Route.get('/', getBooks);
 Route.post('/', verifyToken, checkAdmin, createBook);
-Route.put('/:id', verifyToken, checkAdmin, upload, updateBooks);
+Route.put('/:id', verifyToken, checkAdmin, updateBook);
 Route.delete('/', verifyToken, checkAdmin, deleteBooks);
 Route.delete('/:id', verifyToken, checkAdmin, deleteBook);
 Route.get('/shows/', showBooksRandom);
