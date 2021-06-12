@@ -9,7 +9,6 @@ const {
   showBooksRandom,
   deleteBook,
 } = require('../controllers/bookController');
-const upload = require('../middlerware/multerMiddleware');
 const {
   checkAdmin,
   verifyToken,

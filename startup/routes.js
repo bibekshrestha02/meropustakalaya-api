@@ -1,4 +1,3 @@
-const express = require('express');
 const errorMiddleware = require('../middlerware/errorMiddleware');
 const authRoute = require('../routes/authRoute');
 const userRoute = require('../routes/userRoute');
@@ -9,21 +8,8 @@ const bookRoute = require('../routes/bookRoute');
 const reviewRoute = require('../routes/reviewRoute');
 const carousels = require('../routes/carouselRoute');
 const adminRoute = require('../routes/adminRoute');
-const path = require('path');
-const {
-  verifyToken,
-  checkIsSubscribe,
-  checkAdmin,
-} = require('../middlerware/authMiddleware');
+const { verifyToken, checkAdmin } = require('../middlerware/authMiddleware');
 module.exports = function (app) {
-  app.use(
-    '/api/v1/uploads/bookfiles/',
-    verifyToken,
-    checkIsSubscribe,
-    express.static('uploads/bookFiles')
-  );
-  app.use('/uploads/bookPhotos', express.static('uploads/bookPhotos'));
-
   app.use('/api/v1/admins/', verifyToken, checkAdmin, adminRoute);
   app.use('/api/v1/auths/', authRoute);
   app.use('/api/v1/users/', userRoute);
