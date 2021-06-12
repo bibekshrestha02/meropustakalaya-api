@@ -34,6 +34,7 @@ const bookSchema = new mongose.Schema({
   file: {
     type: String,
     required: true,
+    select: false,
   },
   rating: {
     type: Number,
