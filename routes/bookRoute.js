@@ -9,6 +9,7 @@ const {
   showBooksRandom,
   deleteBook,
   getBookFile,
+  getBooksAdmin,
 } = require('../controllers/bookController');
 const {
   checkAdmin,
@@ -17,6 +18,7 @@ const {
   checkIsSubscribe,
 } = require('../middlerware/authMiddleware');
 Route.get('/', getBooks);
+Route.get('/adminBooks/', verifyToken, checkAdmin, getBooksAdmin);
 Route.post('/', verifyToken, checkAdmin, createBook);
 Route.put('/:id', verifyToken, checkAdmin, updateBook);
 Route.delete('/', verifyToken, checkAdmin, deleteBooks);

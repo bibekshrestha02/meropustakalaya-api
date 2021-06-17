@@ -200,6 +200,35 @@ exports.getBooks = asyncFn(async (req, res) => {
     data: books,
   });
 });
+exports.getBooksAdmin = asyncFn(async (req, res) => {
+  let { category } = req.query;
+  let { sort } = req.query;
+  if (category) {
+    category = category.split(',');
+  } else {
+    category = [];
+  }
+
+  let books;
+  if (category.length < 1) {
+    books = await Book.find()
+      .select(
+        'name autherName pages description category photo file rating numberOfRating releasedAt'
+      )
+      .sort(sort);
+  } else {
+    books = await Book.find({ category: { $in: category } })
+      .select(
+        'name autherName pages description category photo file rating numberOfRating releasedAt'
+      )
+      .sort(sort);
+  }
+
+  res.status(200).json({
+    status: 200,
+    data: books,
+  });
+});
 exports.showBooksRandom = asyncFn(async (req, res) => {
   let books = await Book.aggregate([
     {
